@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile Update</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #4a6fc7;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-weight: 600;
+            font-size: 28px;
+        }
+        
+        .header p {
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+        
+        .form-container {
+            padding: 30px;
+        }
+        
+        .user-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .avatar-section {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #4a6fc7;
+            margin-bottom: 15px;
+        }
+        
+        .avatar-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .avatar-upload-btn {
+            background: #4a6fc7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .avatar-upload-btn:hover {
+            background: #3b5aab;
+        }
+        
+        .form-section {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        .form-input:focus {
+            border-color: #4a6fc7;
+            outline: none;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .success-message {
+            color: #2ecc71;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 14px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #4a6fc7;
+            color: white;
+            flex: 1;
+        }
+        
+        .btn-primary:hover {
+            background: #3b5aab;
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #ddd;
+        }
+        
+        .email-status {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        
+        .status-available {
+            color: #2ecc71;
+        }
+        
+        .status-taken {
+            color: #e74c3c;
+        }
+        
+        .status-checking {
+            color: #f39c12;
+        }
+        
+        @media (max-width: 650px) {
+            .user-info {
+                flex-direction: column;
+            }
+            
+            .avatar-section {
+                order: -1;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Update Your Profile</h1>
+            <p>Keep your information up to date</p>
+        </div>
+        
+        <div class="form-container">
+            <div class="user-info">
+                <div class="avatar-section">
+                    <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="User Avatar" class="avatar" id="userAvatar">
+                    <div class="avatar-upload">
+                        <button class="avatar-upload-btn" id="uploadBtn">
+                            <i class="fas fa-camera"></i> Change Avatar
+                        </button>
+                        <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" class="form-input" value="Sahil Triv" placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" class="form-input" value="completeuser@example.com" placeholder="Enter your email">
+                        <div class="email-status" id="emailStatus">
+                            <i class="fas fa-check-circle status-available" id="availableIcon" style="display: none;"></i>
+                            <i class="fas fa-times-circle status-taken" id="takenIcon" style="display: none;"></i>
+                            <i class="fas fa-circle-notch fa-spin status-checking" id="checkingIcon" style="display: none;"></i>
+                            <span id="statusText"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" class="form-input" value="932199576" placeholder="Enter your phone number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-input" value="password@123" placeholder="Enter your password">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" class="form-input" value="1990-01-01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" class="form-input" value="123 Main Street, City, State" placeholder="Enter your address">
+                    </div>
+                    
+                    <div class="btn-group">
+                        <button class="btn btn-primary" id="updateBtn">Update Profile</button>
+                        <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailInput = document.getElementById('email');
+            const availableIcon = document.getElementById('availableIcon');
+            const takenIcon = document.getElementById('takenIcon');
+            const checkingIcon = document.getElementById('checkingIcon');
+            const statusText = document.getElementById('statusText');
+            const updateBtn = document.getElementById('updateBtn');
+            const avatarInput = document.getElementById('avatarInput');
+            const userAvatar = document.getElementById('userAvatar');
+            const uploadBtn = document.getElementById('uploadBtn');
+            
+            // Simulated existing emails in the system
+            const existingEmails = [
+                'admin@example.com',
+                'user1@example.com',
+                'testuser@example.com',
+                'existing.user@example.com'
+            ];
+            
+            // Email validation with debouncing
+            let emailCheckTimeout;
+            emailInput.addEventListener('input', function() {
+                clearTimeout(emailCheckTimeout);
+                
+                const email = emailInput.value.trim();
+                
+                // Show checking status
+                checkingIcon.style.display = 'inline-block';
+                availableIcon.style.display = 'none';
+                takenIcon.style.display = 'none';
+                statusText.textContent = 'Checking availability...';
+                statusText.className = 'status-checking';
+                
+                // Use debouncing to avoid checking on every keystroke
+                emailCheckTimeout = setTimeout(() => {
+                    checkEmailAvailability(email);
+                }, 800);
+            });
+            
+            function checkEmailAvailability(email) {
+                // Hide checking status
+                checkingIcon.style.display = 'none';
+                
+                // Basic email validation
+                if (!isValidEmail(email)) {
+                    statusText.textContent = 'Please enter a valid email address';
+                    statusText.className = 'status-taken';
+                    takenIcon.style.display = 'inline-block';
+                    return;
+                }
+                
+                // Check if email is the same as current (no need to check availability)
+                if (email === 'completeuser@example.com') {
+                    statusText.textContent = 'Current email';
+                    statusText.className = 'status-available';
+                    availableIcon.style.display = 'inline-block';
+                    return;
+                }
+                
+                // Simulate API call to check email availability
+                setTimeout(() => {
+                    if (existingEmails.includes(email)) {
+                        statusText.textContent = 'Email already in use';
+                        statusText.className = 'status-taken';
+                        takenIcon.style.display = 'inline-block';
+                    } else {
+                        statusText.textContent = 'Email available';
+                        statusText.className = 'status-available';
+                        availableIcon.style.display = 'inline-block';
+                    }
+                }, 500);
+            }
+            
+            function isValidEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            // Update button click handler
+            updateBtn.addEventListener('click', function() {
+                const email = emailInput.value.trim();
+                
+                if (!isValidEmail(email)) {
+                    alert('Please enter a valid email address');
+                    return;
+                }
+                
+                if (email !== 'completeuser@example.com' && existingEmails.includes(email)) {
+                    alert('This email is already registered. Please use a different email.');
+                    return;
+                }
+                
+                // Simulate successful update
+                alert('Profile updated successfully!');
+            });
+            
+            // Avatar upload functionality
+            uploadBtn.addEventListener('click', function() {
+                avatarInput.click();
+            });
+            
+            avatarInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        userAvatar.src = e.target.result;
+                    }
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+            
+            // Cancel button
+            document.getElementById('cancelBtn').addEventListener('click', function() {
+                if (confirm('Discard all changes?')) {
+                    // Reset form to original values
+                    emailInput.value = 'completeuser@example.com';
+                    document.getElementById('fullName').value = 'Sahil Triv';
+                    document.getElementById('phone').value = '932199576';
+                    document.getElementById('password').value = 'password@123';
+                    document.getElementById('dob').value = '1990-01-01';
+                    document.getElementById('address').value = '123 Main Street, City, State';
+                    
+                    // Reset email status
+                    checkingIcon.style.display = 'none';
+                    takenIcon.style.display = 'none';
+                    availableIcon.style.display = 'none';
+                    statusText.textContent = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
