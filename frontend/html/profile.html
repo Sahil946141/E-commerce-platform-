@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - StyleHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="global.css">
+  <style>
+    /* ... (your existing styles remain unchanged) ... */
+  </style>
+</head>
+<body>
+  <!-- Header (same as index.html) -->
+  <header>
+  <div class="header-container">
+    <a href="index.html" class="logo">Style<span>Hub</span></a>
+    
+    <nav>
+      <ul>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="mens.html">MEN</a></li>
+        <li><a href="women.html">WOMEN</a></li>
+        <li><a href="accessories.html">ACCESSORIES</a></li>
+        <li><a href="sale.html">SALE</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-right">
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Search for products, brands and more">
+      </div>
+      
+      <!-- Authentication Container (Dynamically changes based on login state) -->
+      <div class="auth-container" id="auth-container">
+        <!-- This will be populated by JavaScript based on auth state -->
+      </div>
+      
+      <div class="header-icons">
+        <button class="icon-btn wishlist-count" data-count="0">
+          <i class="far fa-heart"></i>
+        </button>
+        <div style="position: relative;">
+          <button class="icon-btn">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="cart-count" data-count="0"></span>
+          </button>
+          <div class="cart-preview"></div>
+          <div class="wishlist-preview"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+  <main>
+    <div class="profile-container">
+      <div class="profile-header">
+        <h1>My Profile</h1>
+        <p>Manage your account settings and preferences</p>
+      </div>
+      
+      <div class="profile-content">
+        <div class="profile-sidebar">
+          <div class="profile-avatar" id="profile-avatar">
+            <!-- Dynamically populated -->
+          </div>
+          <h3 id="profile-name">Loading...</h3>
+          <p id="profile-email">Loading...</p>
+          
+          <ul class="profile-nav">
+            <li><a href="#personal" class="active">Personal Information</a></li>
+            <li><a href="#addresses">Addresses</a></li>
+            <li><a href="#security">Security</a></li>
+            <li><a href="#preferences">Preferences</a></li>
+          </ul>
+        </div>
+        
+        <div class="profile-main">
+          <div id="personal" class="profile-section active">
+            <h2>Personal Information</h2>
+            <form id="personal-form">
+              <div class="form-group">
+                <label for="full-name">Full Name</label>
+                <input type="text" id="full-name" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" required disabled>
+              </div>
+              
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone">
+              </div>
+              
+              <button type="submit" class="btn-save">Save Changes</button>
+            </form>
+          </div>
+          
+          <div id="addresses" class="profile-section">
+            <h2>Addresses</h2>
+            <div id="addresses-list">
+              <!-- Addresses will be loaded here -->
+            </div>
+            <button id="add-address-btn" class="btn-save">Add New Address</button>
+          </div>
+          
+          <!-- Other sections would be here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer (same as index.html) -->
+  <footer>
+    <!-- Your footer content from index.html -->
+  </footer>
+
+  <script src="global.js"></script>
+  <script>
+  // API Configuration
+  const API_BASE_URL = 'http://localhost:5000/api';
+  const AUTH_TOKEN_KEY = 'authToken';
+  const USER_DATA_KEY = 'userData';
+
+  // Profile page specific functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Check authentication
+    if (!requireAuth()) return;
+    
+    // Load user data
+    loadUserProfile();
+    
+    // Setup navigation
+    setupProfileNavigation();
+  });
+  
+  function requireAuth() {
+    const token = localStorage.getItem(AUTH_TOKEN_KEY);
+    const userData = localStorage.getItem(USER_DATA_KEY);
+    
+    if (!token || !userData) {
+      const currentUrl = encodeURIComponent(window.location.href);
+      window.location.href = `auth.html?action=login&redirect=${currentUrl}`;
+      return false;
+    }
+    return true;
+  }
+  
+  function loadUserProfile() {
+    const token = localStorage.getItem(AUTH_TOKEN_KEY);
+    
+    // Updated API endpoint
+    fetch(`${API_BASE_URL}/users/profile`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to fetch user data');
+      return response.json();
+    })
+    .then(user => {
+      // Update UI with user data
+      document.getElementById('profile-name').textContent = user.full_name;
+      document.getElementById('profile-email').textContent = user.email;
+      document.getElementById('full-name').value = user.full_name;
+      document.getElementById('email').value = user.email;
+      document.getElementById('phone').value = user.phone || '';
+      
+      // Update avatar
+      const avatarEl = document.getElementById('profile-avatar');
+      if (user.avatar_url) {
+        avatarEl.innerHTML = `<img src="${user.avatar_url}" alt="${user.full_name}">`;
+      } else {
+        avatarEl.textContent = user.full_name.charAt(0).toUpperCase();
+      }
+      
+      // Setup form submission
+      setupProfileForm(user);
+    })
+    .catch(error => {
+      console.error('Error loading user profile:', error);
+      showNotification('Failed to load profile data.', 'error');
+    });
+  }
+  
+  // Add function to handle profile form submission
+  function setupProfileForm(user) {
+    const personalForm = document.getElementById('personal-form');
+    
+    personalForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = {
+        full_name: document.getElementById('full-name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value
+      };
+      
+      // Update user profile
+      updateUserProfile(formData);
+    });
+  }
+  
+  // Function to update user profile
+  function updateUserProfile(formData) {
+    const token = localStorage.getItem(AUTH_TOKEN_KEY);
+    
+    // Updated API endpoint
+    fetch(`${API_BASE_URL}/users/profile/update`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to update profile');
+      return response.json();
+    })
+    .then(updatedUser => {
+      // Update local storage with new user data
+      localStorage.setItem(USER_DATA_KEY, JSON.stringify(updatedUser));
+      
+      // Update UI
+      document.getElementById('profile-name').textContent = updatedUser.full_name;
+      const avatarEl = document.getElementById('profile-avatar');
+      if (!updatedUser.avatar_url) {
+        avatarEl.textContent = updatedUser.full_name.charAt(0).toUpperCase();
+      }
+      
+      showNotification('Profile updated successfully!', 'success');
+    })
+    .catch(error => {
+      console.error('Error updating profile:', error);
+      showNotification('Failed to update profile.', 'error');
+    });
+  }
+  
+  function setupProfileNavigation() {
+    const navLinks = document.querySelectorAll('.profile-nav a');
+    const sections = document.querySelectorAll('.profile-section');
+    
+    navLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Update active nav link
+        navLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        
+        // Show corresponding section
+        const targetId = this.getAttribute('href').substring(1);
+        sections.forEach(section => {
+          section.classList.remove('active');
+          if (section.id === targetId) {
+            section.classList.add('active');
+          }
+        });
+      });
+    });
+  }
+  
+  // Show notification function
+  function showNotification(message, type = 'info') {
+    // Remove any existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notification => notification.remove());
+    
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+      <span>${message}</span>
+      <button class="notification-close">&times;</button>
+    `;
+    
+    // Add styles if not already present
+    if (!document.querySelector('#notification-styles')) {
+      const styles = document.createElement('style');
+      styles.id = 'notification-styles';
+      styles.textContent = `
+        .notification {
+          position: fixed;
+          top: 100px;
+          right: 20px;
+          padding: 15px 20px;
+          border-radius: 5px;
+          color: white;
+          z-index: 10000;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          min-width: 300px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .notification-success {
+          background-color: #4CAF50;
+        }
+        .notification-error {
+          background-color: #F44336;
+        }
+        .notification-info {
+          background-color: #2196F3;
+        }
+        .notification-close {
+          background: none;
+          border: none;
+          color: white;
+          font-size: 20px;
+          cursor: pointer;
+          margin-left: 15px;
+        }
+      `;
+      document.head.appendChild(styles);
+    }
+    
+    // Add to document
+    document.body.appendChild(notification);
+    
+    // Add close event
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+      notification.remove();
+    });
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.remove();
+      }
+    }, 5000);
+  }
+</script>
+</body>
+</html>

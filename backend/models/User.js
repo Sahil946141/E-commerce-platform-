@@ -6,30 +6,29 @@ import jwtConfig from '../config/jwt.js';
 class User {
   // AUTHENTICATION METHODS
   static async create({ email, password, full_name, phone, address, date_of_birth, avatar_url, role = 'customer' }) {
-    const client = await db.connect();
-    try {
-      console.log('Starting transaction for user creation');
-      await client.query('BEGIN');
-      
-      const hashedPassword = await bcrypt.hash(password, 10);
-      console.log('Hashed password:', hashedPassword);
-      
-      const result = await client.query(
-        'INSERT INTO users (email, password, full_name, phone, address, date_of_birth, avatar_url, role) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING user_id, email, full_name, phone, address, date_of_birth, avatar_url, role, is_active, created_at',
-        [email, hashedPassword, full_name, phone, address, date_of_birth, avatar_url, role]
-      );
-      
-      await client.query('COMMIT');
-      console.log('User created successfully:', result.rows[0]);
-      return result.rows[0];
-    } catch (err) {
-      await client.query('ROLLBACK');
-      console.error('Error creating user:', err.stack);
-      throw err;
-    } finally {
-      client.release();
-    }
+  const client = await db.connect();
+  try {
+    await client.query('BEGIN');
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    const result = await client.query(
+      `INSERT INTO users (email, password, full_name, phone, address, date_of_birth, avatar_url, role) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+       RETURNING user_id, email, full_name, phone, address, date_of_birth, avatar_url, role, is_active, created_at`,
+      [email, hashedPassword, full_name, phone, address, date_of_birth, avatar_url, role]
+    );
+    
+    await client.query('COMMIT');
+    return result.rows[0];
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Error creating user:', err.stack);
+    throw err;
+  } finally {
+    client.release();
   }
+}
   
   static async findByEmail(email) {
     const result = await db.query(
@@ -48,8 +47,11 @@ class User {
   }
 
   static async comparePasswords(candidatePassword, hashedPassword) {
-    return await bcrypt.compare(candidatePassword, hashedPassword);
+  if (!candidatePassword || !hashedPassword) {
+    return false;
   }
+  return await bcrypt.compare(candidatePassword, hashedPassword);
+}
 
   static async createSession(user_id, token, expiresAt) {
     const client = await db.connect();

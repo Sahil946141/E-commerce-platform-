@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StyleHub - Fashion for Everyone</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="global.css">
+  <style>
+    /* Inherit all global styles */
+    /* Add homepage-specific styles */
+    
+    /* Hero Section */
+    .hero {
+      height: calc(90vh - var(--header-height));
+      background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        url('https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      padding: 0 2rem;
+    }
+    
+    .hero-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity:0;
+      transition: opacity 1s ease;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: var(--white);
+    }
+    
+    .hero-slide.active {
+      opacity: 1;
+    }
+    .hero-content h2 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+    
+    .hero-content p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--white);
+      padding: 0.8rem 2rem;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    
+    .btn:hover {
+      background: var(--accent-light);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    /* Categories Section */
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 3px;
+      background: var(--accent);
+    }
+    
+    .categories {
+      padding: 4rem 2rem;
+    }
+    
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .category-card {
+      position: relative;
+      height: 300px;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+    
+    .category-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .category-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .category-card:hover img {
+      transform: scale(1.1);
+    }
+    
+    .category-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5rem;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+      color: var(--white);
+    }
+    
+    .category-content h3 {
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Products Section */
+    .products {
+      padding: 4rem 2rem;
+      background: var(--white);
+    }
+    
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .product-card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+    
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .product-image {
+      position: relative;
+      height: 250px;
+      overflow: hidden;
+    }
+    
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .product-card:hover .product-image img {
+      transform: scale(1.05);
+    }
+    
+    .product-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: var(--sale-accent);
+      color: var(--white);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .product-actions {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      opacity: 0;
+      transition: var(--transition);
+    }
+    
+    .product-card:hover .product-actions {
+      opacity: 1;
+    }
+    
+    .action-btn {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: var(--white);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+    
+    .action-btn:hover {
+      background: var(--accent);
+      color: var(--white);
+    }
+    
+    .product-info {
+      padding: 1.5rem;
+    }
+    
+    .product-info h3 {
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+    
+    .product-price {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .current-price {
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: var(--accent);
+    }
+    
+    .original-price {
+      text-decoration: line-through;
+      color: var(--light-text);
+      font-size: 0.9rem;
+    }
+    
+    .add-to-cart-btn {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    
+    .add-to-cart-btn:hover {
+      background: var(--accent);
+    }
+     .brands {
+      padding: 4rem 0;
+      background: white;
+    }
+    
+    .brand-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 2rem;
+    }
+    
+   .brand-card {
+    background: white;
+    border-radius: 10px;
+    padding: 0.5rem;
+    display: flex
+;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow);
+}
+    
+    .brand-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .brand-logo-large {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    
+    .brand-logo-large img {
+      width: 80%;
+      height: 80%;
+      object-fit: contain;
+    }
+     .brand-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .brand-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    /* Newsletter Section */
+    .newsletter {
+      padding: 5rem 2rem;
+      background: var(--primary);
+      color: var(--white);
+      text-align: center;
+    }
+    
+    .newsletter-content {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .newsletter h2 {
+      margin-bottom: 1rem;
+    }
+    
+    .newsletter p {
+      margin-bottom: 2rem;
+      opacity: 0.9;
+    }
+    
+    .newsletter-form {
+      display: flex;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    .newsletter-input {
+      flex: 1;
+      padding: 1rem;
+      border: none;
+      border-radius: 30px 0 0 30px;
+      font-size: 1rem;
+    }
+    
+    .newsletter-input:focus {
+      outline: none;
+    }
+    
+    .newsletter-btn {
+      padding: 0 1.5rem;
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      border-radius: 0 30px 30px 0;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    
+    .newsletter-btn:hover {
+      background: var(--accent-light);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .hero-content h2 {
+        font-size: 2rem;
+      }
+      
+      .hero-content p {
+        font-size: 1rem;
+      }
+      
+      .categories-grid,
+      .products-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+      
+      .newsletter-form {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .newsletter-input,
+      .newsletter-btn {
+        border-radius: 30px;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header (from global elements) -->
+  <header>
+  <div class="header-container">
+    <a href="index.html" class="logo">Style<span>Hub</span></a>
+    
+    <nav>
+      <ul>
+        <li><a href="index.html" class="active">HOME</a></li>
+        <li><a href="mens.html">MEN</a></li>
+        <li><a href="women.html">WOMEN</a></li>
+        <li><a href="accessories.html">ACCESSORIES</a></li>
+        <li><a href="sale.html">SALE</a></li>
+      </ul>
+    </nav>
+
+    <div class="header-right">
+      <div class="search-container">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Search for products, brands and more">
+      </div>
+      
+      <!-- Authentication Container (Dynamically changes based on login state) -->
+      <div class="auth-container" id="auth-container">
+        <!-- This will be populated by JavaScript based on auth state -->
+      </div>
+      
+      <div class="header-icons">
+        <button class="icon-btn wishlist-count" data-count="0">
+          <i class="far fa-heart"></i>
+        </button>
+        <div style="position: relative;">
+          <button class="icon-btn">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="cart-count" data-count="0"></span>
+          </button>
+          <div class="cart-preview"></div>
+          <div class="wishlist-preview"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Banner -->
+    <section class="hero">
+      <div class="hero-slide active" >
+        <div class="hero-content">
+          <h2>Summer Collection 2024</h2>
+          <p>Discover the latest trends and styles for the season</p>
+          <a href="women.html" class="btn">Shop Now</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Categories -->
+    <section class="categories">
+      <h2 class="section-title">Shop By Category</h2>
+      <div class="categories-grid">
+        <a href="mens.html" class="category-card">
+          <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Men's Fashion">
+          <div class="category-content">
+            <h3>Men's Fashion</h3>
+            <p>Latest trends for men</p>
+          </div>
+        </a>
+        <a href="women.html" class="category-card">
+          <img src="https://images.unsplash.com/photo-1525299374597-911581e1bdef?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Women's Fashion">
+          <div class="category-content">
+            <h3>Women's Fashion</h3>
+            <p>Stylish outfits for women</p>
+          </div>
+        </a>
+        <a href="accessories.html" class="category-card">
+          <img src="https://images.unsplash.com/photo-1591561954557-26941169b49e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Accessories">
+          <div class="category-content">
+            <h3>Accessories</h3>
+            <p>Complete your look</p>
+          </div>
+        </a>
+        <a href="sale.html" class="category-card">
+          <img src="https://images.unsplash.com/photo-1607083206968-13611e3d76db?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Sale">
+          <div class="category-content">
+            <h3>Sale</h3>
+            <p>Up to 50% off</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- New Arrivals -->
+    <section class="products">
+      <h2 class="section-title">New Arrivals</h2>
+      <div class="products-grid" id="new-arrivals">
+        <!-- Products will be dynamically loaded here -->
+      </div>
+    </section>
+
+    <!-- Sale Items -->
+    <section class="products" style="background-color: #f9f9f9;">
+      <h2 class="section-title">On Sale Now</h2>
+      <div class="products-grid" id="sale-items">
+        <!-- Products will be dynamically loaded here -->
+      </div>
+    </section>
+    <section class="brands">
+    <div class="container">
+      <div class="section-title">
+        <h2>Shop By Brand</h2>
+        <p>Discover your favorite fashion brands</p>
+      </div>
+      <div class="brand-grid">
+        <div class="brand-card">
+          <div class="brand-logo-large">
+            <img src="https://logo.clearbit.com/nike.com" alt="Nike">
+          </div>
+          <h3>Nike</h3>
+          <a href="#" class="btn">Shop Now</a>
+        </div>
+        <div class="brand-card">
+          <div class="brand-logo-large">
+            <img src="https://logo.clearbit.com/adidas.com" alt="Adidas">
+          </div>
+          <h3>Adidas</h3>
+          <a href="#" class="btn">Shop Now</a>
+        </div>
+        <div class="brand-card">
+          <div class="brand-logo-large">
+            <img src="https://logo.clearbit.com/zara.com" alt="Zara">
+          </div>
+          <h3>Zara</h3>
+          <a href="#" class="btn">Shop Now</a>
+        </div>
+        <div class="brand-card">
+          <div class="brand-logo-large">
+            <img src="https://logo.clearbit.com/hm.com" alt="H&M">
+          </div>
+          <h3>H&M</h3>
+          <a href="#" class="btn">Shop Now</a>
+        </div>
+        <div class="brand-card">
+          <div class="brand-logo-large">
+            <img src="https://logo.clearbit.com/levi.com" alt="Levi's">
+          </div>
+          <h3>Levi's</h3>
+          <a href="#" class="btn">Shop Now</a>
+        </div>
+        <div class="brand-card">
+          <div class="brand-logo-large">
+            <img src="https://logo.clearbit.com/forever21.com" alt="Forever 21">
+          </div>
+          <h3>Forever 21</h3>
+          <a href="#" class="btn">Shop Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+      <div class="newsletter-content">
+        <h2>Subscribe to Our Newsletter</h2>
+        <p>Get the latest updates on new products, special offers, and fashion tips.</p>
+        <form class="newsletter-form">
+          <input type="email" class="newsletter-input" placeholder="Enter your email address" required>
+          <button type="submit" class="newsletter-btn">Subscribe</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (from global elements) -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Shop</h3>
+        <ul>
+          <li><a href="mens.html">Men's Fashion</a></li>
+          <li><a href="women.html">Women's Fashion</a></li>
+          <li><a href="accessories.html">Accessories</a></li>
+          <li><a href="sale.html">Sale</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Customer Service</h3>
+        <ul>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Size Guide</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>About</h3>
+        <ul>
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Follow Us</h3>
+        <ul>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">Pinterest</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 StyleHub. All rights reserved.</p>
+    </div>
+  </footer>
+<script src="global.js"></script>
+<script src="homepage.js"></script>
+</body>
+</html>

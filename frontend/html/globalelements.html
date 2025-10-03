@@ -1,0 +1,118 @@
+<!-- global-elements.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Elements | StyleHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="global.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo">Style<span>Hub</span></a>
+      
+      <nav>
+        <ul>
+          <li><a href="index.html">HOME</a></li>
+          <li><a href="mens.html">MEN</a></li>
+          <li><a href="women.html">WOMEN</a></li>
+          <li><a href="accessories.html">ACCESSORIES</a></li>
+          <li><a href="sale.html">SALE</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-right">
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Search for products, brands and more">
+        </div>
+        <div class="user-dropdown">
+            <button class="icon-btn">
+              <i class="far fa-user"></i>
+            </button>
+            <div class="user-dropdown-content">
+              <a href="profile.html" class="user-dropdown-item">My Profile</a>
+              <a href="orders.html" class="user-dropdown-item">My Orders</a>
+              <a href="wishlist.html" class="user-dropdown-item">My Wishlist</a>
+              <div class="user-dropdown-divider"></div>
+              <a href="#" class="user-dropdown-item" id="logout-link">Logout</a>
+            </div>
+          </div>
+        <div class="header-icons">
+          <button class="icon-btn wishlist-count" data-count="0">
+            <i class="far fa-heart"></i>
+          </button>
+          <div style="position: relative;">
+            <button class="icon-btn">
+              <i class="fas fa-shopping-bag"></i>
+              <span class="cart-count" data-count="0"></span>
+            </button>
+            <div class="cart-preview"></div>
+            <div class="wishlist-preview"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- This will be replaced by page-specific content -->
+    <div style="padding: 2rem; text-align: center;">
+      <h1>Global Elements Demo</h1>
+      <p>This page demonstrates the global header and footer elements that will appear on all pages.</p>
+      <p>The actual page content will be loaded here for each specific page.</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Shop</h3>
+        <ul>
+          <li><a href="mens.html">Men's Fashion</a></li>
+          <li><a href="women.html">Women's Fashion</a></li>
+          <li><a href="accessories.html">Accessories</a></li>
+          <li><a href="sale.html">Sale</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Customer Service</h3>
+        <ul>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Size Guide</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>About</h3>
+        <ul>
+          <li><a href="#">Our Story</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>Follow Us</h3>
+        <ul>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">Facebook</a></li>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">Pinterest</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 StyleHub. All rights reserved.</p>
+    </div>
+  </footer>
+<script src="global.js"></script>
+
+</body>
+</html>
